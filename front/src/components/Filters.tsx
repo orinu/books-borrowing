@@ -29,9 +29,9 @@ const Filters: React.FC = () => {
       />
       <input
         type="text"
-        placeholder="תיאור"
-        value={filters.description}
-        onChange={(e) => dispatch(setFilters({ description: e.target.value }))}
+        placeholder="תואר"
+        value={filters.degreeName}
+        onChange={(e) => dispatch(setFilters({ degreeName: e.target.value }))}
       />
     </div>
   );

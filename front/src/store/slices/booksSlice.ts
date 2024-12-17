@@ -4,6 +4,7 @@ interface Book {
   id: string;
   title: string;
   courseName: string;
+  degreeName: string; // New field
   author: string;
   location: string;
   isbn: string;
@@ -13,7 +14,7 @@ interface Filters {
   courseNumber: string;
   bookName: string;
   location: string;
-  description: string;
+  degreeName: string;
 }
 
 interface BooksState {
@@ -27,24 +28,17 @@ const initialState: BooksState = {
       id: '1',
       title: 'Introduction to Algorithms',
       courseName: 'CS101',
+      degreeName: 'Computer Science', // Added example
       author: 'Thomas H. Cormen',
       location: 'Library Shelf 5',
       isbn: '9780262033848',
-    },
-    {
-      id: '2',
-      title: 'Clean Code',
-      courseName: 'CS102',
-      author: 'Robert C. Martin',
-      location: 'Library Shelf 7',
-      isbn: '9780132350884',
     },
   ],
   filters: {
     courseNumber: '',
     bookName: '',
     location: '',
-    description: '',
+    degreeName: '',
   },
 };
 
