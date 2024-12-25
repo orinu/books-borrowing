@@ -2,12 +2,14 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { login, logout } from '../store/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
 import AddBookModal from './AddBookModal';
 
 const TopBar: React.FC = () => {
   const [isModalOpen, setModalOpen] = React.useState(false);
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -17,7 +19,7 @@ const TopBar: React.FC = () => {
       {isAuthenticated ? (
         <>
           <button>הגדרות</button>
-          <button>הספרים שלי</button>
+          <button onClick={() => navigate('/my-books')}>הספרים שלי</button>
           <button onClick={openModal}>ספר חדש</button>
           <button onClick={() => dispatch(logout())}>התנתקות</button>
         </>

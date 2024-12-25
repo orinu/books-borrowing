@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addBook } from '../store/slices/booksSlice';
 import { v4 as uuidv4 } from 'uuid';
+import { RootState } from '../store/store';
 
-Modal.setAppElement('#root'); // Set the root element for accessibility
+Modal.setAppElement('#root'); // Accessibility requirement for Modal
 
 interface AddBookModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean; // Modal visibility
+  onClose: () => void; // Function to close the modal
 }
 
 const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
@@ -19,6 +20,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
   const [location, setLocation] = useState('');
   const [isbn, setIsbn] = useState('');
 
+  const userId = useSelector((state: RootState) => 'dasd123'); // Replace with dynamic user ID from auth logic
   const dispatch = useDispatch();
 
   const handleAddBook = () => {
@@ -32,6 +34,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
           author,
           location,
           isbn,
+          userId,
         })
       );
       // Reset fields
@@ -41,7 +44,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
       setAuthor('');
       setLocation('');
       setIsbn('');
-      onClose(); // Close modal after adding the book
+      onClose(); // Close the modal after adding the book
     } else {
       alert('Please fill in all fields.');
     }
