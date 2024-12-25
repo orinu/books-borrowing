@@ -1,15 +1,14 @@
 import React from 'react';
-import TopBar from './components/TopBar';
-import Filters from './components/Filters';
-import BookTable from './components/BookTable';
+import { Routes, Route } from 'react-router-dom';
+import MainPage from './pages/MainPage';
+import BookDetails from './pages/BookDetails';
 
 const App: React.FC = () => {
   return (
-    <div style={{ padding: '20px', direction: "rtl" }}>
-      <TopBar />
-      <Filters />
-      <BookTable />
-    </div>
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/book/:id" element={<BookDetails />} />
+    </Routes>
   );
 };
 

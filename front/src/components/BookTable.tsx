@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import { Link } from 'react-router-dom';
 
 const BookTable: React.FC = () => {
   const { books, filters } = useSelector((state: RootState) => state.books);
 
   const filteredBooks = books.filter((book) => {
-    // Convert values to lowercase for case-insensitive matching
     const courseNumberFilter = filters.courseNumber.toLowerCase();
     const bookNameFilter = filters.bookName.toLowerCase();
     const locationFilter = filters.location.toLowerCase();
@@ -36,7 +36,9 @@ const BookTable: React.FC = () => {
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
             <tr key={book.id}>
-              <td>{book.title}</td>
+              <td>
+                <Link to={`/book/${book.id}`}>{book.title}</Link>
+              </td>
               <td>{book.courseName}</td>
               <td>{book.degreeName}</td>
               <td>{book.author}</td>

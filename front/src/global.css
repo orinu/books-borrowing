@@ -1,0 +1,18 @@
+/* Apply RTL direction and font styling for the whole site */
+body {
+    direction: rtl;
+    text-align: right;
+    font-family: Arial, sans-serif; /* You can use other fonts suitable for RTL */
+  }
+  
+  table {
+    width: 100%;
+    text-align: right;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
