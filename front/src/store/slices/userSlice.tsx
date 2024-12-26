@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface User {
+  userId: string; // Add userId
   name: string;
   email: string;
   phone: string;
 }
 
 const initialState: User = {
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "phone": "123-456-7890"
+  userId: 'user123', // Example user ID
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+  phone: '123-456-7890',
 };
 
 export const userSlice = createSlice({

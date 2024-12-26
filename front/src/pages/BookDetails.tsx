@@ -43,8 +43,9 @@ const BookDetails: React.FC = () => {
       <p><strong>מספר ISBN:</strong> {book.isbn}</p>
       {isAuthenticated ? (
         <>
-          <p><strong>דוא"ל הלווה:</strong> borrower@example.com</p>
-          <p><strong>טלפון של הלווה:</strong> 123-456-7890</p>
+          <p><strong>שם המוסר:</strong>{book.userName}</p>
+          <p><strong>דוא"ל הלווה:</strong>{book.userEmail}</p>
+          <p><strong>טלפון של הלווה:</strong>{book.userPhone}</p>
         </>
       ) : (
         <button onClick={handleRedirectToLogin} style={{ color: 'blue', textDecoration: 'underline' }}>

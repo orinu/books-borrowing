@@ -9,7 +9,10 @@ interface Book {
   location: string;
   isbn: string;
   userId: string;
-  status: 'available' | 'taken'; // Book status
+  userName: string; // Add user name
+  userPhone: string; // Add user phone
+  userEmail: string; // Add user email
+  status: 'available' | 'taken';
 }
 
 interface Filters {
@@ -34,7 +37,10 @@ const initialState: BooksState = {
       author: 'Thomas H. Cormen',
       location: 'Library Shelf 5',
       isbn: '9780262033848',
-      userId: 'dasd123',
+      userName: 'user123',
+      userId: 'user123',
+      userPhone: '123-456-7890',
+      userEmail: 'user@example.com',
       status: 'available',
     },
     {
@@ -46,6 +52,9 @@ const initialState: BooksState = {
       location: 'Library Shelf 7',
       isbn: '9780132350884',
       userId: 'user456',
+      userName: 'Orion',
+      userPhone: '123-111-7890',
+      userEmail: '222@example.com',
       status: 'taken',
     },
   ],

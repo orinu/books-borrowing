@@ -20,7 +20,8 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
   const [location, setLocation] = useState('');
   const [isbn, setIsbn] = useState('');
 
-  const userId = useSelector((state: RootState) => 'currentUserId'); // Replace with actual logic
+  // Get user data from the Redux store
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   const handleAddBook = () => {
@@ -34,7 +35,10 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
           author,
           location,
           isbn,
-          userId,
+          userId: user.userId,
+          userName: user.name, // Add user name
+          userPhone: user.phone, // Add user phone
+          userEmail: user.email, // Add user email
           status: 'available', // Default status
         })
       );
