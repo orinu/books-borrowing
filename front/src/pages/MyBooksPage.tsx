@@ -5,8 +5,10 @@ import MyBooks from '../components/MyBooks';
 const MyBooksPage: React.FC = () => {
   return (
     <div>
-      <PersonalDetails />
-      <MyBooks />
+      <div style={{ padding: '20px' }}>
+        <PersonalDetails />
+        <MyBooks />
+      </div>
     </div>
   );
 };
