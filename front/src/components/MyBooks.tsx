@@ -5,23 +5,23 @@ import { toggleBookStatus } from '../store/slices/booksSlice';
 
 const MyBooks: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const userId = "dasd123"; // Replace with dynamic user ID from your auth logic
+  const userId = 'dasd123'; // Replace with dynamic user ID from your auth logic
   const books = useSelector((state: RootState) =>
     state.books.books.filter((book) => book.userId === userId)
   );
   const dispatch = useDispatch();
 
-  if (!isAuthenticated) {
-    return <div>אנא התחבר כדי לצפות בספרים שלך</div>;
-  }
-
   const handleStatusChange = (id: string, newStatus: 'available' | 'taken') => {
     dispatch(toggleBookStatus({ id, newStatus }));
   };
 
+  if (!isAuthenticated) {
+    return <div>אנא התחבר כדי לצפות בספרים שלך</div>;
+  }
+
   return (
     <div style={{ padding: '20px', textAlign: 'right' }}>
-      <h1>הספרים שלי</h1>
+      <h2>הספרים שלי</h2>
       {books.length === 0 ? (
         <p>אין לך ספרים.</p>
       ) : (
@@ -47,7 +47,9 @@ const MyBooks: React.FC = () => {
                 <td>
                   <select
                     value={book.status}
-                    onChange={(e) => handleStatusChange(book.id, e.target.value as 'available' | 'taken')}
+                    onChange={(e) =>
+                      handleStatusChange(book.id, e.target.value as 'available' | 'taken')
+                    }
                   >
                     <option value="available">זמין</option>
                     <option value="taken">תפוס</option>
