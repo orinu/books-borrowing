@@ -1,17 +1,23 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
+import { toggleBookStatus } from '../store/slices/booksSlice';
 
 const MyBooks: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const userId = "dasd123"; // Replace this with the actual logged-in user's ID from your auth logic
+  const userId = "dasd123"; // Replace with dynamic user ID from your auth logic
   const books = useSelector((state: RootState) =>
     state.books.books.filter((book) => book.userId === userId)
   );
+  const dispatch = useDispatch();
 
   if (!isAuthenticated) {
     return <div>אנא התחבר כדי לצפות בספרים שלך</div>;
   }
+
+  const handleStatusChange = (id: string, newStatus: 'available' | 'taken') => {
+    dispatch(toggleBookStatus({ id, newStatus }));
+  };
 
   return (
     <div style={{ padding: '20px', textAlign: 'right' }}>
@@ -27,7 +33,7 @@ const MyBooks: React.FC = () => {
               <th>שם תואר</th>
               <th>מחבר</th>
               <th>מיקום</th>
-              <th>מספר ISBN</th>
+              <th>סטטוס</th>
             </tr>
           </thead>
           <tbody>
@@ -38,7 +44,15 @@ const MyBooks: React.FC = () => {
                 <td>{book.degreeName}</td>
                 <td>{book.author}</td>
                 <td>{book.location}</td>
-                <td>{book.isbn}</td>
+                <td>
+                  <select
+                    value={book.status}
+                    onChange={(e) => handleStatusChange(book.id, e.target.value as 'available' | 'taken')}
+                  >
+                    <option value="available">זמין</option>
+                    <option value="taken">תפוס</option>
+                  </select>
+                </td>
               </tr>
             ))}
           </tbody>

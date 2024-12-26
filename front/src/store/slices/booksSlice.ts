@@ -8,7 +8,8 @@ interface Book {
   author: string;
   location: string;
   isbn: string;
-  userId: string; // To associate the book with a user
+  userId: string;
+  status: 'available' | 'taken'; // Book status
 }
 
 interface Filters {
@@ -19,8 +20,8 @@ interface Filters {
 }
 
 interface BooksState {
-  books: Book[]; // All books in the system
-  filters: Filters; // Filters for general search
+  books: Book[];
+  filters: Filters;
 }
 
 const initialState: BooksState = {
@@ -33,7 +34,8 @@ const initialState: BooksState = {
       author: 'Thomas H. Cormen',
       location: 'Library Shelf 5',
       isbn: '9780262033848',
-      userId: 'dasd123', // Example user ID
+      userId: 'dasd123',
+      status: 'available',
     },
     {
       id: '2',
@@ -43,7 +45,8 @@ const initialState: BooksState = {
       author: 'Robert C. Martin',
       location: 'Library Shelf 7',
       isbn: '9780132350884',
-      userId: 'user456', // Another user ID
+      userId: 'user456',
+      status: 'taken',
     },
   ],
   filters: {
@@ -58,31 +61,20 @@ export const booksSlice = createSlice({
   name: 'books',
   initialState,
   reducers: {
-    // Add a new book to the system
     addBook: (state, action: PayloadAction<Book>) => {
       state.books.push(action.payload);
     },
-
-    // Set filters for searching books
     setFilters: (state, action: PayloadAction<Partial<Filters>>) => {
       state.filters = { ...state.filters, ...action.payload };
     },
-
-    // Fetch books for a specific user
-    fetchUserBooks: (state, action: PayloadAction<string>) => {
-      // This reducer is not necessary for Redux Toolkit because selectors handle this
-      // If needed, use it for async operations to fetch user-specific books
+    toggleBookStatus: (state, action: PayloadAction<{ id: string; newStatus: 'available' | 'taken' }>) => {
+      const book = state.books.find((b) => b.id === action.payload.id);
+      if (book) {
+        book.status = action.payload.newStatus;
+      }
     },
   },
 });
 
-// Selector to get all books for a specific user
-export const selectUserBooks = (state: BooksState, userId: string) =>
-  state.books.filter((book) => book.userId === userId);
-
-// Selectors to access general filters
-export const selectFilters = (state: BooksState) => state.filters;
-
-// Export actions and reducer
-export const { addBook, setFilters } = booksSlice.actions;
+export const { addBook, setFilters, toggleBookStatus } = booksSlice.actions;
 export default booksSlice.reducer;

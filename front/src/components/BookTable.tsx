@@ -13,6 +13,7 @@ const BookTable: React.FC = () => {
     const degreeNameFilter = filters.degreeName.toLowerCase();
 
     return (
+      book.status === 'available' &&
       (courseNumberFilter === '' || book.courseName.toLowerCase().includes(courseNumberFilter)) &&
       (bookNameFilter === '' || book.title.toLowerCase().includes(bookNameFilter)) &&
       (locationFilter === '' || book.location.toLowerCase().includes(locationFilter)) &&
@@ -21,7 +22,7 @@ const BookTable: React.FC = () => {
   });
 
   return (
-    <table border={1} style={{ width: '100%', textAlign: 'center' }}>
+    <table>
       <thead>
         <tr>
           <th>שם</th>
