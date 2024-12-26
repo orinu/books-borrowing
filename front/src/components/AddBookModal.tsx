@@ -8,8 +8,8 @@ import { RootState } from '../store/store';
 Modal.setAppElement('#root'); // Accessibility requirement for Modal
 
 interface AddBookModalProps {
-  isOpen: boolean; // Modal visibility
-  onClose: () => void; // Function to close the modal
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
@@ -20,7 +20,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
   const [location, setLocation] = useState('');
   const [isbn, setIsbn] = useState('');
 
-  const userId = useSelector((state: RootState) => 'dasd123'); // Replace with dynamic user ID from auth logic
+  const userId = useSelector((state: RootState) => 'currentUserId'); // Replace with actual logic
   const dispatch = useDispatch();
 
   const handleAddBook = () => {
@@ -35,18 +35,18 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
           location,
           isbn,
           userId,
+          status: 'available', // Default status
         })
       );
-      // Reset fields
       setTitle('');
       setCourseName('');
       setDegreeName('');
       setAuthor('');
       setLocation('');
       setIsbn('');
-      onClose(); // Close the modal after adding the book
+      onClose();
     } else {
-      alert('Please fill in all fields.');
+      alert('אנא מלא את כל השדות.');
     }
   };
 
