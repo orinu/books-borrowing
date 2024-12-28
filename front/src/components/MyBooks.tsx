@@ -5,7 +5,7 @@ import { toggleBookStatus } from '../store/slices/booksSlice';
 
 const MyBooks: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const userId = useSelector((state: RootState) => state.user.userId); 
+  const userId = useSelector((state: RootState) => state.auth.user!.userId); 
   const books = useSelector((state: RootState) =>
     state.books.books.filter((book) => book.userId === userId)
   );
