@@ -52,7 +52,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
     } else {
       alert('אנא מלא את כל השדות.');
     }
-  };
+  };  `z`
 
   return (
     <Modal
