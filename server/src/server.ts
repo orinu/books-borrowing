@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import User from './models/User';
 import JwtPayload from './types/types';
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
@@ -14,6 +15,14 @@ const JWT_SECRET = 'your_jwt_secret_key';
 // Middleware to parse JSON and cookies
 app.use(express.json());
 app.use(cookieParser());
+
+// Configure CORS
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // Replace with your frontend URL
+    credentials: true, // Allow credentials (cookies, authorization headers)
+  })
+);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/mydb')

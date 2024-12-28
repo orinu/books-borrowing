@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
+import { fetchUserProfile } from './store/slices/authSlice';
+import { RootState } from './store/store';
 import MainPage from './pages/MainPage';
 import BookDetails from './pages/BookDetails';
 import MyBooksPage from './pages/MyBooksPage';
+import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const isInitialized = useSelector((state: RootState) => state.auth.isAuthenticated !== null);
+
+  // Fetch user profile on app load
+  useEffect(() => {
+    dispatch(fetchUserProfile());
+  }, [dispatch]);
+
+  // Show a loading screen until the user authentication state is resolved
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Routes>
       {/* Main Page */}
@@ -15,6 +32,16 @@ const App: React.FC = () => {
         element={
           <Layout>
             <MainPage />
+          </Layout>
+        }
+      />
+
+      {/* Login Page */}
+      <Route
+        path="/login"
+        element={
+          <Layout showTopBar={false}>
+            <LoginPage />
           </Layout>
         }
       />

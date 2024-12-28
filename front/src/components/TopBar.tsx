@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
-import { login, logout } from '../store/slices/authSlice';
+import { handleLogout } from '../store/slices/authSlice';
 import AddBookModal from './AddBookModal';
 
 const TopBar: React.FC = () => {
@@ -10,11 +10,16 @@ const TopBar: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Modal state for adding a new book
+  // State for the "ספר חדש" modal
   const [isModalOpen, setModalOpen] = useState(false);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  const logout = async () => {
+    await dispatch(handleLogout());
+    navigate('/login'); // Redirect to login page after logout
+  };
 
   return (
     <div
@@ -51,15 +56,15 @@ const TopBar: React.FC = () => {
           <>
             <button onClick={() => navigate('/my-books')}>הספרים שלי</button>
             <button onClick={openModal}>ספר חדש</button>
-            <button onClick={() => dispatch(logout())}>התנתקות</button>
+            <button onClick={logout}>התנתקות</button>
           </>
         ) : (
-          <button onClick={() => dispatch(login())}>התחברות</button>
+          <button onClick={() => navigate('/login')}>התחברות</button>
         )}
       </div>
 
       {/* Add Book Modal */}
-      <AddBookModal isOpen={isModalOpen} onClose={closeModal} />
+      {isAuthenticated && <AddBookModal isOpen={isModalOpen} onClose={closeModal} />}
     </div>
   );
 };
