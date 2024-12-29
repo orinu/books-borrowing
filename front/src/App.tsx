@@ -9,6 +9,8 @@ import MyBooksPage from './pages/MyBooksPage';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import RegisterPage from "./pages/RegisterPage";
+
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,6 +44,16 @@ const App: React.FC = () => {
         element={
           <Layout showTopBar={false}>
             <LoginPage />
+          </Layout>
+        }
+      />
+
+      {/* Login Page */}
+      <Route
+        path="/register"
+        element={
+          <Layout showTopBar={false}>
+            <RegisterPage />
           </Layout>
         }
       />

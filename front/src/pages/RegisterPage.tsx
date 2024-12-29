@@ -1,24 +1,26 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { login } from "../store/slices/authSlice";
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:3000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, phone, password }),
         credentials: "include", // Include cookies in the request
       });
 
@@ -37,7 +39,7 @@ const LoginPage: React.FC = () => {
         }
       } else {
         const { message } = await response.json();
-        setError(message || "Login failed. Please try again.");
+        setError(message || "Registration failed. Please try again.");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
@@ -48,16 +50,30 @@ const LoginPage: React.FC = () => {
     <div
       style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}
     >
-      <h1>Login</h1>
+      <h1>Register</h1>
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         style={{ display: "flex", flexDirection: "column", gap: "10px" }}
       >
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="tel"
+          placeholder="Phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
           required
         />
         <input
@@ -68,15 +84,15 @@ const LoginPage: React.FC = () => {
           required
         />
         <button type="submit" style={{ padding: "10px", cursor: "pointer" }}>
-          Login
+          Register
         </button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
       <p>
-        Don't have an account? <a href="/register">Sign up</a>
+        Already have an account? <a href="/login">Login</a>
       </p>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

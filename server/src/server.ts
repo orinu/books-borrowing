@@ -63,12 +63,26 @@ app.post("/register", async (req: Request, res: Response): Promise<any> => {
   try {
     const user = new User({ name, email, phone, password });
     await user.save();
+
+    const token = jwt.sign(
+      { userId: user._id, name: user.name, email: user.email, phone: user.phone },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Set token as a cookie
+    res.cookie("auth_token", token, {
+      httpOnly: true, // Ensures the cookie is only accessible by the server
+      maxAge: 3600000, // 1 hour expiration
+    });
+
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error registering user", error);
     return res.status(500).json({ message: "Error registering user", error });
   }
 });
+
 
 // Login route
 app.post("/login", async (req: Request, res: Response): Promise<any> => {
