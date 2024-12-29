@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import RegisterPage from "./pages/RegisterPage";
+import './scss/main.scss';
 
 
 const App: React.FC = () => {

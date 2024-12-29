@@ -1,0 +1,46 @@
+@import "../base/variables";
+
+// _booktable.scss
+.book-table {
+    width: 100%;
+    border-collapse: collapse;  
+    thead {
+      background-color: $primary-color;
+      color: $background-color;
+  
+      th {
+        padding: $spacing-sm;
+        font-size: $font-size-small;
+      }
+    }
+  
+    tbody {
+      tr {
+        &:hover {
+          background-color: $secondary-color;
+        }
+  
+        td {
+          padding: $spacing-sm;
+          border-bottom: 1px solid $border-color;
+        }
+  
+        a {
+          color: $primary-color;
+          text-decoration: none;
+  
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  
+    .no-books {
+      text-align: center;
+      color: $danger-color;
+      font-size: $font-size-small;
+      padding: $spacing-lg;
+    }
+  }
+  

@@ -1,0 +1,88 @@
+// _bookdetails.scss
+@import "../base/variables";
+
+.book-details {
+  padding: $spacing-md;
+  text-align: right;
+  font-family: $font-family-primary;
+
+  h1 {
+    font-size: $font-size-large;
+    color: $primary-color;
+    margin-bottom: $spacing-md;
+  }
+
+  p {
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-base;
+    line-height: 1.5;
+
+    strong {
+      color: $text-color;
+      font-weight: bold;
+    }
+  }
+
+  .auth-details {
+    margin-top: $spacing-md;
+
+    button {
+      background-color: $primary-color;
+      color: $background-color;
+      border: none;
+      padding: $spacing-sm $spacing-md;
+      border-radius: 5px;
+      font-size: $font-size-base;
+      font-family: $font-family-primary;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: lighten($primary-color, 10%);
+      }
+
+      &:active {
+        background-color: darken($primary-color, 10%);
+        transform: scale(0.98);
+      }
+
+      &.login-prompt {
+        background: none;
+        color: $primary-color;
+        text-decoration: underline;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+
+        &:hover {
+          color: darken($primary-color, 10%);
+        }
+      }
+    }
+  }
+
+  .share-button {
+    margin-top: $spacing-md;
+
+    button {
+      background-color: $accent-color;
+      color: $background-color;
+      border: none;
+      padding: $spacing-sm $spacing-md;
+      border-radius: 5px;
+      font-size: $font-size-base;
+      font-family: $font-family-primary;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: lighten($accent-color, 10%);
+      }
+
+      &:active {
+        background-color: darken($accent-color, 10%);
+        transform: scale(0.98);
+      }
+    }
+  }
+}

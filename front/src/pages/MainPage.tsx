@@ -1,6 +1,7 @@
 import React from 'react';
 import Filters from '../components/Filters';
 import BookTable from '../components/BookTable';
+import styles from './MainPage.module.scss';
 
 const MainPage: React.FC = () => {
   return (

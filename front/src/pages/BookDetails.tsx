@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import '../scss/pages/_bookdetails.scss';
 
 const BookDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +35,7 @@ const BookDetails: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '20px', textAlign: 'right' }}>
+    <div className="book-details">
       <h1>{book.title}</h1>
       <p><strong>שם קורס:</strong> {book.courseName}</p>
       <p><strong>שם תואר:</strong> {book.degreeName}</p>
@@ -42,17 +43,21 @@ const BookDetails: React.FC = () => {
       <p><strong>מיקום:</strong> {book.location}</p>
       <p><strong>מספר ISBN:</strong> {book.isbn}</p>
       {isAuthenticated ? (
-        <>
-          <p><strong>שם המוסר:</strong>{book.userName}</p>
-          <p><strong>דוא"ל הלווה:</strong>{book.userEmail}</p>
-          <p><strong>טלפון של הלווה:</strong>{book.userPhone}</p>
-        </>
+        <div className="auth-details">
+          <p><strong>שם המוסר:</strong> {book.userName}</p>
+          <p><strong>דוא"ל הלווה:</strong> {book.userEmail}</p>
+          <p><strong>טלפון של הלווה:</strong> {book.userPhone}</p>
+        </div>
       ) : (
-        <button onClick={handleRedirectToLogin} style={{ color: 'blue', textDecoration: 'underline' }}>
-          התחבר לצפייה בפרטים
-        </button>
+        <div className="auth-details">
+          <button className="login-prompt" onClick={handleRedirectToLogin}>
+            התחבר לצפייה בפרטים
+          </button>
+        </div>
       )}
-      <button onClick={handleShare}>שתף</button>
+      <div className="share-button">
+        <button onClick={handleShare}>שתף</button>
+      </div>
     </div>
   );
 };

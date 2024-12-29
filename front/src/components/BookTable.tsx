@@ -2,6 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Link } from 'react-router-dom';
+import '../scss/components/_booktable.scss';
+
 
 const BookTable: React.FC = () => {
   const { books, filters } = useSelector((state: RootState) => state.books);
@@ -22,7 +24,7 @@ const BookTable: React.FC = () => {
   });
 
   return (
-    <table>
+    <table className="book-table">
       <thead>
         <tr>
           <th>שם</th>
@@ -49,7 +51,7 @@ const BookTable: React.FC = () => {
           ))
         ) : (
           <tr>
-            <td colSpan={6}>לא נמצאו ספרים</td>
+            <td className='.no-books' colSpan={6}>לא נמצאו ספרים</td>
           </tr>
         )}
       </tbody>

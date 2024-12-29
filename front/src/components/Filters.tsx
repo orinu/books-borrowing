@@ -2,13 +2,14 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilters } from '../store/slices/booksSlice';
 import { RootState } from '../store/store';
+import '../scss/components/_filters.scss';
 
 const Filters: React.FC = () => {
   const filters = useSelector((state: RootState) => state.books.filters);
   const dispatch = useDispatch();
 
   return (
-    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+    <div className='filters' style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
       <input
         type="text"
         placeholder="מספר קורס"

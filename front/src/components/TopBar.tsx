@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
-import { handleLogout } from '../store/slices/authSlice';
-import AddBookModal from './AddBookModal';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store/store";
+import { handleLogout } from "../store/slices/authSlice";
+import AddBookModal from "./AddBookModal";
+import "../scss/components/_topbar.scss";
 
 const TopBar: React.FC = () => {
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -18,53 +21,38 @@ const TopBar: React.FC = () => {
 
   const logout = async () => {
     await dispatch(handleLogout());
-    navigate('/login'); // Redirect to login page after logout
+    navigate("/login"); // Redirect to login page after logout
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '10px 20px',
-        backgroundColor: '#f8f9fa',
-        borderBottom: '1px solid #ddd',
-      }}
-    >
+    <div className="topbar">
       {/* Logo */}
-      <div
-        onClick={() => navigate('/')}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-        }}
-      >
+      <div className="logo" onClick={() => navigate("/")}>
         <img
           src="https://via.placeholder.com/40" // Replace with actual logo URL
           alt="Logo"
-          style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+          style={{ width: "40px", height: "40px", borderRadius: "50%" }}
         />
-        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>My Library</span>
+        <span style={{ fontSize: "20px", fontWeight: "bold" }}>My Library</span>
       </div>
 
       {/* Navigation Buttons */}
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: "flex", gap: "20px" }} className="nav-buttons">
         {isAuthenticated ? (
           <>
-            <button onClick={() => navigate('/my-books')}>הספרים שלי</button>
+            <button onClick={() => navigate("/my-books")}>הספרים שלי</button>
             <button onClick={openModal}>ספר חדש</button>
             <button onClick={logout}>התנתקות</button>
           </>
         ) : (
-          <button onClick={() => navigate('/login')}>התחברות</button>
+          <button onClick={() => navigate("/login")}>התחברות</button>
         )}
       </div>
 
       {/* Add Book Modal */}
-      {isAuthenticated && <AddBookModal isOpen={isModalOpen} onClose={closeModal} />}
+      {isAuthenticated && (
+        <AddBookModal isOpen={isModalOpen} onClose={closeModal} />
+      )}
     </div>
   );
 };
