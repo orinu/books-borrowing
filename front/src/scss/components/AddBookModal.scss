@@ -1,0 +1,717 @@
+/* AddBookModal.scss */
+@import "../base/variables";
+
+.add-book-modal {
+  background-color: $background-color;
+  padding: $spacing-lg;
+  border-radius: $border-radius-md;
+  box-shadow: $box-shadow-medium;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+
+  .modal-header {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    margin-bottom: $spacing-md;
+
+    .tab-button {
+      flex: 1;
+      padding: $spacing-sm $spacing-md;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: $font-family-primary;
+      font-size: $font-size-base;
+      transition: background-color 0.3s ease;
+      color: $text-color;
+
+      &.active {
+        border-bottom: 2px solid $primary-color;
+        color: $primary-color;
+      }
+
+      &:hover {
+        background-color: lighten($secondary-color, 5%);
+      }
+    }
+  }
+
+  .modal-content {
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      label {
+        font-family: $font-family-primary;
+        font-size: $font-size-base;
+        color: $text-color;
+      }
+
+      input {
+        padding: $spacing-sm;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        font-family: $font-family-primary;
+        font-size: $font-size-base;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+      }
+    }
+
+    .isbn-section {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      label {
+        font-family: $font-family-primary;
+        font-size: $font-size-base;
+        color: $text-color;
+      }
+
+      .isbn-input-group {
+        display: flex;
+        gap: $spacing-sm;
+
+        input {
+          flex: 1;
+          padding: $spacing-sm;
+          border: 1px solid $border-color;
+          border-radius: $border-radius-sm;
+          font-family: $font-family-primary;
+          font-size: $font-size-base;
+
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+          }
+        }
+
+        .fetch-button {
+          background-color: $accent-color;
+          color: $background-color;
+          border: none;
+          padding: $spacing-sm $spacing-md;
+          border-radius: $border-radius-sm;
+          font-size: $font-size-base;
+          font-family: $font-family-primary;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.1s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background-color: darken($accent-color, 10%);
+          }
+
+          &:active {
+            background-color: darken($accent-color, 15%);
+            transform: scale(0.98);
+          }
+
+          &:focus {
+            outline: 2px solid lighten($accent-color, 20%);
+          }
+        }
+      }
+
+      .loading-spinner {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        color: $info-color;
+        font-size: $font-size-small;
+
+        .spinner {
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      .error-message {
+        color: $danger-color;
+        font-size: $font-size-small;
+      }
+
+      .fetched-data {
+        margin-top: $spacing-md;
+        padding: $spacing-sm;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        background-color: lighten($secondary-color, 5%);
+
+        p {
+          margin: 0;
+          font-family: $font-family-primary;
+          font-size: $font-size-small;
+
+          strong {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    margin-top: $spacing-md;
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: $spacing-sm;
+
+      .add-button {
+        background-color: $primary-color;
+        color: $background-color;
+        border: none;
+        padding: $spacing-sm $spacing-md;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-base;
+        font-family: $font-family-primary;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+
+        &:active {
+          background-color: darken($primary-color, 15%);
+          transform: scale(0.98);
+        }
+
+        &:focus {
+          outline: 2px solid lighten($primary-color, 20%);
+        }
+      }
+
+      .cancel-button {
+        background-color: $danger-color;
+        color: $background-color;
+        border: none;
+        padding: $spacing-sm $spacing-md;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-base;
+        font-family: $font-family-primary;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+
+        &:active {
+          background-color: darken($danger-color, 15%);
+          transform: scale(0.98);
+        }
+
+        &:focus {
+          outline: 2px solid lighten($danger-color, 20%);
+        }
+      }
+    }
+  }
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* AddBookModal.scss */
+@import "../base/variables";
+
+.add-book-modal {
+  background-color: $background-color;
+  padding: $spacing-lg;
+  border-radius: $border-radius-md;
+  box-shadow: $box-shadow-medium;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+
+  .modal-header {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    margin-bottom: $spacing-md;
+
+    .tab-button {
+      flex: 1;
+      padding: $spacing-sm $spacing-md;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: $font-family-primary;
+      font-size: $font-size-base;
+      transition: background-color 0.3s ease;
+      color: $text-color;
+
+      &.active {
+        border-bottom: 2px solid $primary-color;
+        color: $primary-color;
+      }
+
+      &:hover {
+        background-color: lighten($secondary-color, 5%);
+      }
+    }
+  }
+
+  .modal-content {
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      label {
+        font-family: $font-family-primary;
+        font-size: $font-size-base;
+        color: $text-color;
+      }
+
+      input {
+        padding: $spacing-sm;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        font-family: $font-family-primary;
+        font-size: $font-size-base;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+      }
+    }
+
+    .isbn-section {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      label {
+        font-family: $font-family-primary;
+        font-size: $font-size-base;
+        color: $text-color;
+      }
+
+      .isbn-input-group {
+        display: flex;
+        gap: $spacing-sm;
+
+        input {
+          flex: 1;
+          padding: $spacing-sm;
+          border: 1px solid $border-color;
+          border-radius: $border-radius-sm;
+          font-family: $font-family-primary;
+          font-size: $font-size-base;
+
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+          }
+        }
+
+        .fetch-button {
+          background-color: $accent-color;
+          color: $background-color;
+          border: none;
+          padding: $spacing-sm $spacing-md;
+          border-radius: $border-radius-sm;
+          font-size: $font-size-base;
+          font-family: $font-family-primary;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.1s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background-color: darken($accent-color, 10%);
+          }
+
+          &:active {
+            background-color: darken($accent-color, 15%);
+            transform: scale(0.98);
+          }
+
+          &:focus {
+            outline: 2px solid lighten($accent-color, 20%);
+          }
+        }
+      }
+
+      .loading-spinner {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        color: $info-color;
+        font-size: $font-size-small;
+
+        .spinner {
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      .error-message {
+        color: $danger-color;
+        font-size: $font-size-small;
+      }
+
+      .fetched-data {
+        margin-top: $spacing-md;
+        padding: $spacing-sm;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        background-color: lighten($secondary-color, 5%);
+
+        p {
+          margin: 0;
+          font-family: $font-family-primary;
+          font-size: $font-size-small;
+
+          strong {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    margin-top: $spacing-md;
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: $spacing-sm;
+
+      .add-button {
+        background-color: $primary-color;
+        color: $background-color;
+        border: none;
+        padding: $spacing-sm $spacing-md;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-base;
+        font-family: $font-family-primary;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+
+        &:active {
+          background-color: darken($primary-color, 15%);
+          transform: scale(0.98);
+        }
+
+        &:focus {
+          outline: 2px solid lighten($primary-color, 20%);
+        }
+      }
+
+      .cancel-button {
+        background-color: $danger-color;
+        color: $background-color;
+        border: none;
+        padding: $spacing-sm $spacing-md;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-base;
+        font-family: $font-family-primary;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+
+        &:active {
+          background-color: darken($danger-color, 15%);
+          transform: scale(0.98);
+        }
+
+        &:focus {/* AddBookModal.scss */
+            @import "../base/variables";
+            
+            .add-book-modal {
+              background-color: $background-color;
+              padding: $spacing-lg;
+              border-radius: $border-radius-md;
+              box-shadow: $box-shadow-medium;
+              max-height: 90vh;
+              overflow-y: auto;
+              position: relative;
+              width: 90%;
+              max-width: 600px;
+            
+              .modal-header {
+                display: flex;
+                border-bottom: 1px solid $border-color;
+                margin-bottom: $spacing-md;
+            
+                .tab-button {
+                  flex: 1;
+                  padding: $spacing-sm $spacing-md;
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  font-family: $font-family-primary;
+                  font-size: $font-size-base;
+                  transition: background-color 0.3s ease;
+                  color: $text-color;
+            
+                  &.active {
+                    border-bottom: 2px solid $primary-color;
+                    color: $primary-color;
+                  }
+            
+                  &:hover {
+                    background-color: lighten($secondary-color, 5%);
+                  }
+                }
+              }
+            
+              .modal-content {
+                .form-group {
+                  display: flex;
+                  flex-direction: column;
+                  gap: $spacing-sm;
+            
+                  label {
+                    font-family: $font-family-primary;
+                    font-size: $font-size-base;
+                    color: $text-color;
+                  }
+            
+                  input {
+                    padding: $spacing-sm;
+                    border: 1px solid $border-color;
+                    border-radius: $border-radius-sm;
+                    font-family: $font-family-primary;
+                    font-size: $font-size-base;
+            
+                    &:focus {
+                      border-color: $primary-color;
+                      outline: none;
+                      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+                    }
+                  }
+                }
+            
+                .isbn-section {
+                  display: flex;
+                  flex-direction: column;
+                  gap: $spacing-sm;
+            
+                  label {
+                    font-family: $font-family-primary;
+                    font-size: $font-size-base;
+                    color: $text-color;
+                  }
+            
+                  .isbn-input-group {
+                    display: flex;
+                    gap: $spacing-sm;
+            
+                    input {
+                      flex: 1;
+                      padding: $spacing-sm;
+                      border: 1px solid $border-color;
+                      border-radius: $border-radius-sm;
+                      font-family: $font-family-primary;
+                      font-size: $font-size-base;
+            
+                      &:focus {
+                        border-color: $primary-color;
+                        outline: none;
+                        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+                      }
+                    }
+            
+                    .fetch-button {
+                      background-color: $accent-color;
+                      color: $background-color;
+                      border: none;
+                      padding: $spacing-sm $spacing-md;
+                      border-radius: $border-radius-sm;
+                      font-size: $font-size-base;
+                      font-family: $font-family-primary;
+                      cursor: pointer;
+                      transition: background-color 0.3s ease, transform 0.1s ease;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+            
+                      &:hover {
+                        background-color: darken($accent-color, 10%);
+                      }
+            
+                      &:active {
+                        background-color: darken($accent-color, 15%);
+                        transform: scale(0.98);
+                      }
+            
+                      &:focus {
+                        outline: 2px solid lighten($accent-color, 20%);
+                      }
+                    }
+                  }
+            
+                  .loading-spinner {
+                    display: flex;
+                    align-items: center;
+                    gap: $spacing-xs;
+                    color: $info-color;
+                    font-size: $font-size-small;
+            
+                    .spinner {
+                      animation: spin 1s linear infinite;
+                    }
+                  }
+            
+                  .error-message {
+                    color: $danger-color;
+                    font-size: $font-size-small;
+                  }
+            
+                  .fetched-data {
+                    margin-top: $spacing-md;
+                    padding: $spacing-sm;
+                    border: 1px solid $border-color;
+                    border-radius: $border-radius-sm;
+                    background-color: lighten($secondary-color, 5%);
+            
+                    p {
+                      margin: 0;
+                      font-family: $font-family-primary;
+                      font-size: $font-size-small;
+            
+                      strong {
+                        color: $primary-color;
+                      }
+                    }
+                  }
+                }
+              }
+            
+              .modal-footer {
+                margin-top: $spacing-md;
+            
+                .buttons {
+                  display: flex;
+                  justify-content: flex-end;
+                  gap: $spacing-sm;
+            
+                  .add-button {
+                    background-color: $primary-color;
+                    color: $background-color;
+                    border: none;
+                    padding: $spacing-sm $spacing-md;
+                    border-radius: $border-radius-sm;
+                    font-size: $font-size-base;
+                    font-family: $font-family-primary;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.1s ease;
+            
+                    &:hover {
+                      background-color: darken($primary-color, 10%);
+                    }
+            
+                    &:active {
+                      background-color: darken($primary-color, 15%);
+                      transform: scale(0.98);
+                    }
+            
+                    &:focus {
+                      outline: 2px solid lighten($primary-color, 20%);
+                    }
+                  }
+            
+                  .cancel-button {
+                    background-color: $danger-color;
+                    color: $background-color;
+                    border: none;
+                    padding: $spacing-sm $spacing-md;
+                    border-radius: $border-radius-sm;
+                    font-size: $font-size-base;
+                    font-family: $font-family-primary;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.1s ease;
+            
+                    &:hover {
+                      background-color: darken($danger-color, 10%);
+                    }
+            
+                    &:active {
+                      background-color: darken($danger-color, 15%);
+                      transform: scale(0.98);
+                    }
+            
+                    &:focus {
+                      outline: 2px solid lighten($danger-color, 20%);
+                    }
+                  }
+                }
+              }
+            }
+            
+            /* Modal Overlay */
+            .modal-overlay {
+              background-color: rgba(0, 0, 0, 0.5);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            /* Spinner Animation */
+            @keyframes spin {
+              to {
+                transform: rotate(360deg);
+              }
+            }
+            
+          outline: 2px solid lighten($danger-color, 20%);
+        }
+      }
+    }
+  }
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import User from "./models/User";
 import JwtPayload from "./types/types";
 import cors from "cors";
+import axios from "axios";
 
 const app = express();
 const port = 3000;
@@ -171,6 +172,26 @@ app.post("/logout", (req: Request, res: Response): any => {
   });
 
   return res.json({ message: "Logged out successfully" });
+});
+
+// Proxy endpoint
+app.get('/api/book/:isbn', async (req, res) => {
+  const { isbn } = req.params;
+  try {
+      const response = await axios.get(`http://openlibrary.org/api/volumes/brief/isbn/${isbn}.json`);
+      //  {
+          // params: {
+          //     bibkeys: `ISBN:${isbn}`,
+          //     jscmd: 'details',
+          //     format: 'json'
+          // }
+      // });
+      console.log("res",response.data)
+      res.json(response.data.records);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to fetch data from Open Library' });
+  }
 });
 
 // Start the server
