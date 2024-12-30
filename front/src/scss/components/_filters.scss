@@ -1,22 +1,41 @@
 @import "../base/variables";
 
-
-// _filters.scss
+/* _filters.scss */
 .filters {
-    display: flex;
-    gap: $spacing-sm;
-    margin-bottom: $spacing-md;
-  
-    input {
-      padding: $spacing-sm;
-      border: 1px solid $border-color;
-      border-radius: 5px;
-      font-size: $font-size-small;
-  
-      &:focus {
-        outline: none;
-        border-color: $primary-color;
-      }
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+
+  input {
+    flex: 1 1 200px;
+    padding: $spacing-sm;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-small;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
     }
   }
-  
+
+  /* Optional: Add select elements */
+  select {
+    flex: 1 1 200px;
+    padding: $spacing-sm;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-small;
+    background-color: $background-color;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    }
+  }
+}

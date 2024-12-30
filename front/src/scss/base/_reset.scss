@@ -11,13 +11,13 @@ html,
 body {
   height: 100%;
   font-size: 100%; /* 16px base */
-  font-family: sans-serif;
+  font-family: $font-family-primary;
   line-height: 1.5;
 }
 
 body {
-  background-color: #fff;
-  color: #333;
+  background-color: $background-color;
+  color: $text-color;
 }
 
 img,

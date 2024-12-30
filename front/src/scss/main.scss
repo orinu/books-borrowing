@@ -1,3 +1,75 @@
+@import './base/variables';
 @import './base/reset';
 @import './base/typography';
-@import './base/variables';
+@import './components/topbar';
+@import './components/booktable';
+@import './components/filters';
+@import './pages/bookdetails';
+
+/* Global Styles */
+body {
+  background-color: $background-color;
+  color: $text-color;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  transition: color 0.3s ease;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-md {
+  margin-top: $spacing-md;
+}
+
+.mb-md {
+  margin-bottom: $spacing-md;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+/* Dark Mode (Optional) */
+body.dark-mode {
+  background-color: $dark-background-color;
+  color: $dark-text-color;
+
+  .topbar {
+    background-color: $dark-secondary-color;
+    border-bottom-color: lighten($dark-background-color, 10%);
+
+    .logo span {
+      color: lighten($dark-primary-color, 20%);
+    }
+
+    .nav-buttons button {
+      background-color: $dark-primary-color;
+
+      &:hover {
+        background-color: lighten($dark-primary-color, 10%);
+      }
+
+      &:active {
+        background-color: lighten($dark-primary-color, 20%);
+      }
+    }
+  }
+
+  /* Adjust other components for dark mode */
+  .book-table thead {
+    background-color: $dark-primary-color;
+  }
+
+  .book-details {
+    background-color: darken($dark-secondary-color, 10%);
+  }
+}

@@ -1,17 +1,21 @@
 /* Typography styles */
 $font-family-primary: 'Roboto', sans-serif;
+$font-family-secondary: 'Open Sans', sans-serif; // New secondary font for variety
 
 body {
   font-family: $font-family-primary;
-  font-size: 16px; /* Base font size */
+  font-size: $font-size-base; /* 16px base */
   line-height: 1.6;
-  color: #333;
+  color: $text-color;
+  background-color: $background-color;
+  transition: background-color 0.3s ease, color 0.3s ease; // For theme transitions
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+  font-weight: $font-weight-bold;
   line-height: 1.3;
   margin-bottom: 0.5em;
+  color: $primary-color; // Ensure headings stand out
 }
 
 h1 {
@@ -40,13 +44,30 @@ h6 {
 
 p {
   margin-bottom: 1em;
+  font-size: $font-size-base;
 }
 
 a {
-  color: #4caf50;
+  color: $primary-color;
   text-decoration: none;
+  transition: color 0.3s ease;
 
-  &:hover {
+  &:hover,
+  &:focus {
     text-decoration: underline;
+    color: darken($primary-color, 10%);
   }
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  /* Adjust other headings as needed */
 }

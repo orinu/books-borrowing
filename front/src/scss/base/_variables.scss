@@ -1,11 +1,20 @@
 /* Colors */
-$primary-color: #4caf50;
+$primary-color: #4caf50; // Consider using a more vibrant shade if needed
 $secondary-color: #f8f9fa;
 $accent-color: #ff9800;
 $danger-color: #f44336;
+$success-color: #28a745; // New color for success messages
+$warning-color: #ffc107; // New color for warnings
+$info-color: #17a2b8; // New color for informational messages
 $text-color: #333;
 $background-color: #fff;
 $border-color: #ddd;
+
+/* Dark Mode Colors (Optional) */
+$dark-background-color: #121212;
+$dark-text-color: #e0e0e0;
+$dark-primary-color: #81c784;
+$dark-secondary-color: #1e1e1e;
 
 /* Typography */
 $font-family-primary: 'Roboto', sans-serif;

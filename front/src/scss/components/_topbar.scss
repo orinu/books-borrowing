@@ -1,6 +1,6 @@
 @import "../base/variables";
 
-// _topbar.scss
+/* _topbar.scss */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -8,23 +8,34 @@
   padding: $spacing-sm $spacing-md;
   background-color: $secondary-color;
   border-bottom: 1px solid $border-color;
+  box-shadow: $box-shadow-light;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
   .logo {
     display: flex;
     align-items: center;
     gap: $spacing-sm;
     cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
 
     img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
+      object-fit: cover;
     }
 
     span {
       font-family: $font-family-primary;
       font-size: $font-size-large;
       font-weight: $font-weight-bold;
+      color: $primary-color;
     }
   }
 
@@ -38,19 +49,38 @@
       color: $background-color;
       border: none;
       padding: $spacing-sm $spacing-md;
-      border-radius: 5px;
+      border-radius: $border-radius-sm;
       font-size: $font-size-base;
       font-family: $font-family-primary;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.1s ease;
 
       &:hover {
-        background-color: #43a047; /* Precomputed darker color */
+        background-color: darken($primary-color, 10%);
       }
 
       &:active {
-        background-color: #388e3c; /* Even darker color */
+        background-color: darken($primary-color, 15%);
         transform: scale(0.98);
+      }
+
+      &:focus {
+        outline: 2px solid lighten($primary-color, 20%);
+      }
+    }
+  }
+
+  /* Responsive Topbar */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .nav-buttons {
+      width: 100%;
+      justify-content: space-between;
+
+      button {
+        flex: 1;
       }
     }
   }

@@ -1,21 +1,26 @@
-// _bookdetails.scss
 @import "../base/variables";
 
+/* _bookdetails.scss */
 .book-details {
   padding: $spacing-md;
-  text-align: right;
+  background-color: lighten($secondary-color, 10%);
+  border-radius: $border-radius-md;
+  box-shadow: $box-shadow-light;
   font-family: $font-family-primary;
+  transition: background-color 0.3s ease;
 
   h1 {
     font-size: $font-size-large;
     color: $primary-color;
     margin-bottom: $spacing-md;
+    text-align: left;
   }
 
   p {
     margin-bottom: $spacing-sm;
     font-size: $font-size-base;
     line-height: 1.5;
+    color: $text-color;
 
     strong {
       color: $text-color;
@@ -31,18 +36,18 @@
       color: $background-color;
       border: none;
       padding: $spacing-sm $spacing-md;
-      border-radius: 5px;
+      border-radius: $border-radius-sm;
       font-size: $font-size-base;
       font-family: $font-family-primary;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.1s ease;
 
       &:hover {
-        background-color: lighten($primary-color, 10%);
+        background-color: darken($primary-color, 10%);
       }
 
       &:active {
-        background-color: darken($primary-color, 10%);
+        background-color: darken($primary-color, 15%);
         transform: scale(0.98);
       }
 
@@ -53,6 +58,7 @@
         border: none;
         padding: 0;
         cursor: pointer;
+        font-size: $font-size-small;
 
         &:hover {
           color: darken($primary-color, 10%);
@@ -69,11 +75,11 @@
       color: $background-color;
       border: none;
       padding: $spacing-sm $spacing-md;
-      border-radius: 5px;
+      border-radius: $border-radius-sm;
       font-size: $font-size-base;
       font-family: $font-family-primary;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.1s ease;
 
       &:hover {
         background-color: lighten($accent-color, 10%);
@@ -83,6 +89,20 @@
         background-color: darken($accent-color, 10%);
         transform: scale(0.98);
       }
+    }
+  }
+
+  /* Responsive Book Details */
+  @media (max-width: 768px) {
+    padding: $spacing-sm;
+
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .auth-details, .share-button {
+      width: 100%;
+      text-align: center;
     }
   }
 }

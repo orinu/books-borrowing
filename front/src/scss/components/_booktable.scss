@@ -1,46 +1,93 @@
 @import "../base/variables";
 
-// _booktable.scss
+/* _booktable.scss */
 .book-table {
-    width: 100%;
-    border-collapse: collapse;  
-    thead {
-      background-color: $primary-color;
-      color: $background-color;
-  
-      th {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: $box-shadow-light;
+  border-radius: $border-radius-md;
+  overflow: hidden;
+  background-color: $background-color;
+
+  thead {
+    background-color: $primary-color;
+    color: $background-color;
+
+    th {
+      padding: $spacing-sm;
+      font-size: $font-size-small;
+      text-align: left;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.3s ease;
+
+      &:nth-child(even) {
+        background-color: lighten($secondary-color, 5%);
+      }
+
+      &:hover {
+        background-color: $secondary-color;
+      }
+
+      td {
         padding: $spacing-sm;
+        border-bottom: 1px solid $border-color;
+        font-size: $font-size-base;
+      }
+
+      a {
+        color: $primary-color;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: darken($primary-color, 10%);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .no-books {
+    text-align: center;
+    color: $danger-color;
+    font-size: $font-size-small;
+    padding: $spacing-lg;
+  }
+
+  /* Responsive Table */
+  @media (max-width: 768px) {
+    thead {
+      display: none;
+    }
+
+    tbody, tr, td {
+      display: block;
+      width: 100%;
+    }
+
+    tr {
+      margin-bottom: $spacing-md;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-sm;
+      padding: $spacing-sm;
+    }
+
+    td {
+      padding: $spacing-xs;
+      position: relative;
+
+      &::before {
+        content: attr(data-label);
+        position: absolute;
+        left: $spacing-sm;
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
         font-size: $font-size-small;
       }
     }
-  
-    tbody {
-      tr {
-        &:hover {
-          background-color: $secondary-color;
-        }
-  
-        td {
-          padding: $spacing-sm;
-          border-bottom: 1px solid $border-color;
-        }
-  
-        a {
-          color: $primary-color;
-          text-decoration: none;
-  
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
-  
-    .no-books {
-      text-align: center;
-      color: $danger-color;
-      font-size: $font-size-small;
-      padding: $spacing-lg;
-    }
   }
-  
+}
