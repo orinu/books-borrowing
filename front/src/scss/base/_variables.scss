@@ -1,14 +1,24 @@
 /* Colors */
-$primary-color: #4caf50; // Consider using a more vibrant shade if needed
+$background-color: #ffffff;
+$text-color: #333333;
+$border-color: #dddddd;
+$primary-color: #007bff;
+$primary-color-hover: #0069d9; // Darker shade for hover
+$primary-color-active: #005cbf; // Even darker shade for active
+$primary-color-focus: #3399ff; // Lightened shade for focus outline
+
 $secondary-color: #f8f9fa;
-$accent-color: #ff9800;
-$danger-color: #f44336;
-$success-color: #28a745; // New color for success messages
-$warning-color: #ffc107; // New color for warnings
-$info-color: #17a2b8; // New color for informational messages
-$text-color: #333;
-$background-color: #fff;
-$border-color: #ddd;
+$accent-color: #17a2b8;
+$accent-color-hover: #138496; // Darker shade for hover
+$accent-color-active: #117a8b; // Even darker shade for active
+$accent-color-focus: #29aaf4; // Lightened shade for focus outline
+
+$danger-color: #dc3545;
+$danger-color-hover: #c82333; // Darker shade for hover
+$danger-color-active: #bd2130; // Even darker shade for active
+$danger-color-focus: #e4606d; // Lightened shade for focus outline
+
+$info-color: #17a2b8;
 
 /* Dark Mode Colors (Optional) */
 $dark-background-color: #121212;
