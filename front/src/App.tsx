@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { fetchUserProfile } from './store/slices/authSlice';
+import { fetchAllBooks } from './store/slices/booksSlice'; 
 import { RootState } from './store/store';
 import MainPage from './pages/MainPage';
 import BookDetails from './pages/BookDetails';
@@ -20,6 +21,7 @@ const App: React.FC = () => {
   // Fetch user profile on app load
   useEffect(() => {
     dispatch(fetchUserProfile());
+    dispatch(fetchAllBooks());
   }, [dispatch]);
 
   // Show a loading screen until the user authentication state is resolved

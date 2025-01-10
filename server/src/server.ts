@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import User from "./models/User";
-import Books from "./models/Books";
+import Book from "./models/Book";
 import JwtPayload from "./types/types";
 import cors from "cors";
 import axios from "axios";
@@ -222,7 +222,7 @@ app.post(
       } = req.body;
 
       // Create a new book instance
-      const newBook = new Books({
+      const newBook = new Book({
         title,
         courseName,
         degreeName,
@@ -249,6 +249,17 @@ app.post(
     }
   }
 );
+
+// Get all books
+app.get("/api/books", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const books = await Book.find();
+    return res.json(books);
+  } catch (error) {
+    console.error("Error fetching books:", error);
+    return res.status(500).json({ message: "Error fetching books", error });
+  }
+});
 
 // Start the server
 app.listen(port, () => {
