@@ -204,7 +204,7 @@ app.get("/api/book/:isbn", async (req, res) => {
 app.post(
   "/api/books",
   authenticateUser,
-  async (req: Request, res: Response) : Promise<any> => {
+  async (req: Request, res: Response): Promise<any> => {
     try {
       // Extract the book data from request body
       const {
@@ -260,6 +260,41 @@ app.get("/api/books", async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({ message: "Error fetching books", error });
   }
 });
+
+app.put(
+  "/api/books/:id",
+  authenticateUser,
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { id } = req.params; // Book ID from URL
+      const { status } = req.body; // 'available' or 'taken'
+      console.log("status", status);
+      console.log("id", id);
+      // Validate that status is one of the allowed statuses
+      if (!["available", "taken"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+
+      // Update the book in MongoDB
+      const updatedBook = await Book.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true } // return the updated document
+      );
+
+      if (!updatedBook) {
+        return res.status(404).json({ message: "Book not found" });
+      }
+
+      return res.json(updatedBook); // return the updated book
+    } catch (error) {
+      console.error("Error updating book status:", error);
+      return res
+        .status(500)
+        .json({ message: "Error updating book status", error });
+    }
+  }
+);
 
 // Start the server
 app.listen(port, () => {

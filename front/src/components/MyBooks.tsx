@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
-import { toggleBookStatus } from '../store/slices/booksSlice';
+import { toggleBookStatus, updateBookStatus } from '../store/slices/booksSlice';
 
 const MyBooks: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -13,6 +13,8 @@ const MyBooks: React.FC = () => {
 
   const handleStatusChange = (id: string, newStatus: 'available' | 'taken') => {
     dispatch(toggleBookStatus({ id, newStatus }));
+    console.log('id:', id, 'newStatus:', newStatus);
+    dispatch(updateBookStatus({ id, status: newStatus }));
   };
 
   if (!isAuthenticated) {

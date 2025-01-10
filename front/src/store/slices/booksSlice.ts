@@ -46,6 +46,35 @@ export const fetchAllBooks = createAsyncThunk<Book[], void>(
   }
 );
 
+export const updateBookStatus = createAsyncThunk<
+  { id: string; status: "available" | "taken" }, // Success payload type
+  { id: string; status: "available" | "taken" }, // Arg type
+  { rejectValue: string } // Rejected payload type
+>("books/updateBookStatus", async (args, { rejectWithValue }) => {
+  const { id, status } = args;
+  try {
+    // If you need cookies (auth_token) for authentication, use { withCredentials: true }
+    const response = await axios.put(
+      `http://localhost:3000/api/books/${id}`,
+      {
+        status,
+      },
+      {
+        // Add this configuration object to include cookies
+        withCredentials: true,
+      }
+    );
+    // The server returns the updated book as `response.data`.
+    // We'll return an object containing the book's id and new status
+    return { id, status: response.data.status };
+  } catch (error: any) {
+    console.error("Error updating book status:", error);
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to update book status"
+    );
+  }
+});
+
 const initialState: BooksState = {
   books: [],
   filters: {
@@ -98,6 +127,17 @@ export const booksSlice = createSlice({
       .addCase(fetchAllBooks.rejected, (state, action) => {
         state.loading = false;
         state.error = String(action.payload);
+      })
+      .addCase(updateBookStatus.fulfilled, (state, action) => {
+        const { id, status } = action.payload;
+        const book = state.books.find((b) => b.id === id);
+        if (book) {
+          book.status = status;
+        }
+      })
+      .addCase(updateBookStatus.rejected, (state, action) => {
+        // Optionally handle an error message
+        state.error = action.payload as string;
       });
   },
 });
