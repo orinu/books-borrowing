@@ -268,8 +268,6 @@ app.put(
     try {
       const { id } = req.params; // Book ID from URL
       const { status } = req.body; // 'available' or 'taken'
-      console.log("status", status);
-      console.log("id", id);
       // Validate that status is one of the allowed statuses
       if (!["available", "taken"].includes(status)) {
         return res.status(400).json({ message: "Invalid status" });

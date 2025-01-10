@@ -13,7 +13,6 @@ const MyBooks: React.FC = () => {
 
   const handleStatusChange = (id: string, newStatus: 'available' | 'taken') => {
     dispatch(toggleBookStatus({ id, newStatus }));
-    console.log('id:', id, 'newStatus:', newStatus);
     dispatch(updateBookStatus({ id, status: newStatus }));
   };
 
