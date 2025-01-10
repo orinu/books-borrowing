@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import User from "./models/User";
+import Books from "./models/Books";
 import JwtPayload from "./types/types";
 import cors from "cors";
 import axios from "axios";
@@ -66,7 +67,12 @@ app.post("/register", async (req: Request, res: Response): Promise<any> => {
     await user.save();
 
     const token = jwt.sign(
-      { userId: user._id, name: user.name, email: user.email, phone: user.phone },
+      {
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -83,7 +89,6 @@ app.post("/register", async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({ message: "Error registering user", error });
   }
 });
-
 
 // Login route
 app.post("/login", async (req: Request, res: Response): Promise<any> => {
@@ -175,24 +180,75 @@ app.post("/logout", (req: Request, res: Response): any => {
 });
 
 // Proxy endpoint
-app.get('/api/book/:isbn', async (req, res) => {
+app.get("/api/book/:isbn", async (req, res) => {
   const { isbn } = req.params;
   try {
-      const response = await axios.get(`http://openlibrary.org/api/volumes/brief/isbn/${isbn}.json`);
-      //  {
-          // params: {
-          //     bibkeys: `ISBN:${isbn}`,
-          //     jscmd: 'details',
-          //     format: 'json'
-          // }
-      // });
-      console.log("res",response.data)
-      res.json(response.data.records);
+    const response = await axios.get(
+      `http://openlibrary.org/api/volumes/brief/isbn/${isbn}.json`
+    );
+    //  {
+    // params: {
+    //     bibkeys: `ISBN:${isbn}`,
+    //     jscmd: 'details',
+    //     format: 'json'
+    // }
+    // });
+    console.log("res", response.data);
+    res.json(response.data.records);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to fetch data from Open Library' });
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch data from Open Library" });
   }
 });
+
+app.post(
+  "/api/books",
+  authenticateUser,
+  async (req: Request, res: Response) : Promise<any> => {
+    try {
+      // Extract the book data from request body
+      const {
+        title,
+        courseName,
+        degreeName,
+        author,
+        location,
+        isbn,
+        userId,
+        userName,
+        userPhone,
+        userEmail,
+        status,
+      } = req.body;
+
+      // Create a new book instance
+      const newBook = new Books({
+        title,
+        courseName,
+        degreeName,
+        author,
+        location,
+        isbn,
+        userId,
+        userName,
+        userPhone,
+        userEmail,
+        status: status || "available", // default to 'available' if not provided
+      });
+
+      // Save to DB
+      const savedBook = await newBook.save();
+
+      // Send back the saved book or a success message
+      return res
+        .status(201)
+        .json({ message: "Book created successfully", book: savedBook });
+    } catch (error) {
+      console.error("Error creating book:", error);
+      return res.status(500).json({ message: "Error creating book", error });
+    }
+  }
+);
 
 // Start the server
 app.listen(port, () => {

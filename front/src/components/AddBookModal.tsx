@@ -1,13 +1,13 @@
 // src/components/AddBookModal.tsx
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addBook } from '../store/slices/booksSlice';
-import { v4 as uuidv4 } from 'uuid';
-import { RootState } from '../store/store';
-import axios from 'axios';
-import { FaSpinner } from 'react-icons/fa';
-import Modal from './Modal'; // Import the custom Modal component
-import '../scss/components/AddBookModal.scss';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addBook } from "../store/slices/booksSlice";
+import { v4 as uuidv4 } from "uuid";
+import { RootState } from "../store/store";
+import axios from "axios";
+import { FaSpinner } from "react-icons/fa";
+import Modal from "./Modal"; // Import the custom Modal component
+import "../scss/components/AddBookModal.scss";
 
 interface AddBookModalProps {
   isOpen: boolean;
@@ -24,16 +24,16 @@ type FormData = {
 };
 
 const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'manual' | 'isbn'>('manual');
+  const [activeTab, setActiveTab] = useState<"manual" | "isbn">("manual");
   const [formData, setFormData] = useState<FormData>({
-    title: '',
-    courseName: '',
-    degreeName: '',
-    author: '',
-    location: '',
-    isbn: '',
+    title: "",
+    courseName: "",
+    degreeName: "",
+    author: "",
+    location: "",
+    isbn: "",
   });
-  const [isbnInput, setIsbnInput] = useState('');
+  const [isbnInput, setIsbnInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,7 +55,9 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`http://localhost:3000/api/book/${isbn}`);
+      const response = await axios.get(
+        `http://localhost:3000/api/book/${isbn}`
+      );
       const data = response.data;
 
       // Extract the first book entry from the response
@@ -63,10 +65,11 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
       const bookData = data[bookKey].data;
 
       // Extract necessary fields from the response
-      const title = bookData.title || '';
-      const authors = bookData.authors?.map((author: any) => author.name).join(', ') || '';
-      const location = bookData.publish_places?.[0]?.name || '';
-      const isbn10 = bookData.identifiers?.isbn_10?.[0] || '';
+      const title = bookData.title || "";
+      const authors =
+        bookData.authors?.map((author: any) => author.name).join(", ") || "";
+      const location = bookData.publish_places?.[0]?.name || "";
+      const isbn10 = bookData.identifiers?.isbn_10?.[0] || "";
       // Add more fields if needed
 
       setFormData((prev) => ({
@@ -77,52 +80,87 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
         isbn: isbn10,
       }));
     } catch (err) {
-      console.error('Error fetching book data:', err);
-      setError('Failed to fetch book data. Please check the ISBN and try again.');
+      console.error("Error fetching book data:", err);
+      setError(
+        "Failed to fetch book data. Please check the ISBN and try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddBook = () => {
+  const handleAddBook = async () => {
     const { title, courseName, degreeName, author, location, isbn } = formData;
     if (title && courseName && degreeName && author && location && isbn) {
       if (!validateISBN(isbn)) {
-        alert('Invalid ISBN format.');
+        alert("Invalid ISBN format.");
         return;
       }
       if (!user) {
-        alert('User not found.');
+        alert("User not found.");
         return;
       }
-      dispatch(
-        addBook({
-          id: uuidv4(),
-          title,
-          courseName,
-          degreeName,
-          author,
-          location,
-          isbn,
-          userId: user.userId,
-          userName: user.name,
-          userPhone: user.phone,
-          userEmail: user.email,
-          status: 'available',
-        })
-      );
-      setFormData({
-        title: '',
-        courseName: '',
-        degreeName: '',
-        author: '',
-        location: '',
-        isbn: '',
-      });
+      const bookData = {
+        title,
+        courseName,
+        degreeName,
+        author,
+        location,
+        isbn,
+        userId: user.userId,
+        userName: user.name,
+        userPhone: user.phone,
+        userEmail: user.email,
+        status: "available",
+      };
+
+      try {
+        // Call your new endpoint
+        const response = await axios.post(
+          "http://localhost:3000/api/books",
+          bookData,
+          {
+            withCredentials: true, // if you need to send cookies
+          }
+        );
+        console.log("Book created:", response.data);
+
+        // Then optionally dispatch to your Redux store
+        dispatch(
+          addBook({
+            id: uuidv4(),
+            title,
+            courseName,
+            degreeName,
+            author,
+            location,
+            isbn,
+            userId: user.userId,
+            userName: user.name,
+            userPhone: user.phone,
+            userEmail: user.email,
+            status: "available",
+          })
+        );
+
+        // Clear form and close modal
+        setFormData({
+          title: "",
+          courseName: "",
+          degreeName: "",
+          author: "",
+          location: "",
+          isbn: "",
+        });
+        onClose();
+      } catch (error) {
+        console.error("Error adding book:", error);
+        alert("Error adding book. Please try again.");
+      }
       onClose();
       // Optional: Add a success notification here
     } else {
-      alert('אנא מלא את כל השדות.');
+      alert("אנא מלא את כל השדות.");
     }
   };
 
@@ -130,28 +168,24 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
     if (validateISBN(isbnInput)) {
       fetchBookData(isbnInput);
     } else {
-      setError('Invalid ISBN format.');
+      setError("Invalid ISBN format.");
     }
   };
 
-  const handleTabSwitch = (tab: 'manual' | 'isbn') => {
+  const handleTabSwitch = (tab: "manual" | "isbn") => {
     setActiveTab(tab);
     setError(null);
     // Removed formData reset to preserve data across tabs
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      ariaLabel="Add New Book Modal"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} ariaLabel="Add New Book Modal">
       <div className="add-book-modal">
         <div className="modal-header">
           <button
-            className={`tab-button ${activeTab === 'manual' ? 'active' : ''}`}
-            onClick={() => handleTabSwitch('manual')}
-            aria-selected={activeTab === 'manual'}
+            className={`tab-button ${activeTab === "manual" ? "active" : ""}`}
+            onClick={() => handleTabSwitch("manual")}
+            aria-selected={activeTab === "manual"}
             role="tab"
             aria-controls="manual-tab"
             id="manual-tab-button"
@@ -159,9 +193,9 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
             הוסף ספר
           </button>
           <button
-            className={`tab-button ${activeTab === 'isbn' ? 'active' : ''}`}
-            onClick={() => handleTabSwitch('isbn')}
-            aria-selected={activeTab === 'isbn'}
+            className={`tab-button ${activeTab === "isbn" ? "active" : ""}`}
+            onClick={() => handleTabSwitch("isbn")}
+            aria-selected={activeTab === "isbn"}
             role="tab"
             aria-controls="isbn-tab"
             id="isbn-tab-button"
@@ -171,8 +205,12 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="modal-content">
-          {activeTab === 'manual' && (
-            <div className="form-group" role="tabpanel" aria-labelledby="manual-tab-button">
+          {activeTab === "manual" && (
+            <div
+              className="form-group"
+              role="tabpanel"
+              aria-labelledby="manual-tab-button"
+            >
               <label htmlFor="title">שם הספר</label>
               <input
                 id="title"
@@ -235,8 +273,12 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
-          {activeTab === 'isbn' && (
-            <div className="isbn-section" role="tabpanel" aria-labelledby="isbn-tab-button">
+          {activeTab === "isbn" && (
+            <div
+              className="isbn-section"
+              role="tabpanel"
+              aria-labelledby="isbn-tab-button"
+            >
               <label htmlFor="isbn-search">הזן ISBN</label>
               <div className="isbn-input-group">
                 <input
@@ -246,7 +288,11 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
                   onChange={(e) => setIsbnInput(e.target.value)}
                   placeholder="ISBN"
                 />
-                <button type="button" onClick={handleFetch} className="fetch-button">
+                <button
+                  type="button"
+                  onClick={handleFetch}
+                  className="fetch-button"
+                >
                   חפש
                 </button>
               </div>
@@ -302,9 +348,13 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="modal-footer">
-          {(activeTab === 'manual' || formData.title) && (
+          {(activeTab === "manual" || formData.title) && (
             <div className="buttons">
-              <button type="button" onClick={handleAddBook} className="add-button">
+              <button
+                type="button"
+                onClick={handleAddBook}
+                className="add-button"
+              >
                 הוסף ספר
               </button>
               <button type="button" onClick={onClose} className="cancel-button">
