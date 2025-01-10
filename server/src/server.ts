@@ -280,6 +280,10 @@ app.put(
         { new: true } // return the updated document
       );
 
+      if(updatedBook?.userId !== req.user?.userId){
+        return res.status(403).json({message: "Unauthorized"})
+      }
+      
       if (!updatedBook) {
         return res.status(404).json({ message: "Book not found" });
       }
