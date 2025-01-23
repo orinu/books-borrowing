@@ -1,9 +1,11 @@
+// src/components/TopBar.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store";
 import { handleLogout } from "../store/slices/authSlice";
 import AddBookModal from "./AddBookModal";
+import Logo from "./Logo"; // Import the Logo component
 import "../scss/components/_topbar.scss";
 
 const TopBar: React.FC = () => {
@@ -28,16 +30,12 @@ const TopBar: React.FC = () => {
     <div className="topbar">
       {/* Logo */}
       <div className="logo" onClick={() => navigate("/")}>
-        <img
-          src="https://via.placeholder.com/40" // Replace with actual logo URL
-          alt="Logo"
-          style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-        />
-        <span style={{ fontSize: "20px", fontWeight: "bold" }}>My Library</span>
+        <Logo />
+        <span className="logo-text">My Library</span>
       </div>
 
       {/* Navigation Buttons */}
-      <div style={{ display: "flex", gap: "20px" }} className="nav-buttons">
+      <div className="nav-buttons">
         {isAuthenticated ? (
           <>
             <button onClick={() => navigate("/my-books")}>הספרים שלי</button>
