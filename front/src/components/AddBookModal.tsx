@@ -1,8 +1,7 @@
 // src/components/AddBookModal.tsx
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addBook } from "../store/slices/booksSlice";
-import { v4 as uuidv4 } from "uuid";
+import { addNewBook } from "../store/slices/booksSlice";
 import { RootState } from "../store/store";
 import axios from "axios";
 import { FaSpinner } from "react-icons/fa";
@@ -21,6 +20,11 @@ type FormData = {
   author: string;
   location: string;
   isbn: string;
+  cover?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
 };
 
 const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
@@ -32,6 +36,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
     author: "",
     location: "",
     isbn: "",
+    cover: {},
   });
   const [isbnInput, setIsbnInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,42 +60,36 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/book/${isbn}`
-      );
+      const response = await axios.get(`http://localhost:3000/api/book/${isbn}`);
       const data = response.data;
 
-      // Extract the first book entry from the response
-      const bookKey = Object.keys(data)[0];
-      const bookData = data[bookKey].data;
+      // Check if data is empty
+      if (!data || Object.keys(data).length === 0) {
+        setError("No records found for this ISBN.");
+        return;
+      }
 
-      // Extract necessary fields from the response
-      const title = bookData.title || "";
-      const authors =
-        bookData.authors?.map((author: any) => author.name).join(", ") || "";
-      const location = bookData.publish_places?.[0]?.name || "";
-      const isbn10 = bookData.identifiers?.isbn_10?.[0] || "";
-      // Add more fields if needed
+      // Extract book details
+      const { title, author, location, isbn: fetchedIsbn, cover } = data;
 
       setFormData((prev) => ({
         ...prev,
-        title,
-        author: authors,
-        location,
-        isbn: isbn10,
+        title: title || "",
+        author: author || "",
+        location: location || "",
+        isbn: fetchedIsbn || "",
+        cover: cover || {},
       }));
     } catch (err) {
       console.error("Error fetching book data:", err);
-      setError(
-        "Failed to fetch book data. Please check the ISBN and try again."
-      );
+      setError("Failed to fetch book data. Please check the ISBN and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleAddBook = async () => {
-    const { title, courseName, degreeName, author, location, isbn } = formData;
+    const { title, courseName, degreeName, author, location, isbn, cover } = formData;
     if (title && courseName && degreeName && author && location && isbn) {
       if (!validateISBN(isbn)) {
         alert("Invalid ISBN format.");
@@ -107,41 +106,12 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
         author,
         location,
         isbn,
-        userId: user.userId,
-        userName: user.name,
-        userPhone: user.phone,
-        userEmail: user.email,
-        status: "available",
+        cover,
       };
 
       try {
-        // Call your new endpoint
-        const response = await axios.post(
-          "http://localhost:3000/api/books",
-          bookData,
-          {
-            withCredentials: true, // if you need to send cookies
-          }
-        );
-        console.log("Book created:", response.data);
-
-        // Then optionally dispatch to your Redux store
-        dispatch(
-          addBook({
-            id: uuidv4(),
-            title,
-            courseName,
-            degreeName,
-            author,
-            location,
-            isbn,
-            userId: user.userId,
-            userName: user.name,
-            userPhone: user.phone,
-            userEmail: user.email,
-            status: "available",
-          })
-        );
+        // Dispatch the async thunk
+        await dispatch(addNewBook(bookData)).unwrap();
 
         // Clear form and close modal
         setFormData({
@@ -151,14 +121,14 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
           author: "",
           location: "",
           isbn: "",
+          cover: {},
         });
+        setIsbnInput("");
         onClose();
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error adding book:", error);
-        alert("Error adding book. Please try again.");
+        alert(error || "Error adding book. Please try again.");
       }
-      onClose();
-      // Optional: Add a success notification here
     } else {
       alert("אנא מלא את כל השדות.");
     }
@@ -175,7 +145,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
   const handleTabSwitch = (tab: "manual" | "isbn") => {
     setActiveTab(tab);
     setError(null);
-    // Removed formData reset to preserve data across tabs
+    // Optionally reset form data when switching tabs
   };
 
   return (
@@ -298,8 +268,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
               </div>
               {loading && (
                 <div className="loading-spinner">
-                  <FaSpinner className="spinner" />
-                  <span>טוען...</span>
+                  <FaSpinner className="spinner" /> <span>טוען...</span>
                 </div>
               )}
               {error && <div className="error-message">{error}</div>}
@@ -317,7 +286,15 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
                   <p>
                     <strong>מספר ISBN:</strong> {formData.isbn}
                   </p>
-                  {/* Add more fields as needed */}
+                  {/* Display Cover Image */}
+                  {formData.cover?.medium && (
+                    <div className="fetched-cover">
+                      <img
+                        src={formData.cover.medium}
+                        alt={`${formData.title} cover`}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -354,10 +331,21 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={handleAddBook}
                 className="add-button"
+                disabled={loading}
               >
-                הוסף ספר
+                {loading ? (
+                  <>
+                    <FaSpinner className="spinner" /> טוען...
+                  </>
+                ) : (
+                  "הוסף ספר"
+                )}
               </button>
-              <button type="button" onClick={onClose} className="cancel-button">
+              <button
+                type="button"
+                onClick={onClose}
+                className="cancel-button"
+              >
                 בטל
               </button>
             </div>

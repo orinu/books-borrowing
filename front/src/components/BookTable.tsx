@@ -1,9 +1,12 @@
+// src/components/BookTable.tsx
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Link } from 'react-router-dom';
 import '../scss/components/_booktable.scss';
 
+// Placeholder image URL (You can replace this with your own placeholder)
+const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/50x75?text=No+Cover';
 
 const BookTable: React.FC = () => {
   const { books, filters } = useSelector((state: RootState) => state.books);
@@ -27,7 +30,7 @@ const BookTable: React.FC = () => {
     <table className="book-table">
       <thead>
         <tr>
-          <th>שם</th>
+          <th>כיסוי & שם</th> {/* Combined Cover & Title */}
           <th>שם קורס</th>
           <th>שם תואר</th>
           <th>מחבר</th>
@@ -39,8 +42,17 @@ const BookTable: React.FC = () => {
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
             <tr key={book.id}>
-              <td>
-                <Link to={`/book/${book.id}`}>{book.title}</Link>
+              <td className="cover-title-cell">
+                {book.cover?.small ? (
+                  <img
+                    src={book.cover.small}
+                    alt={`Cover of ${book.title}`}
+                    className="book-cover-small"
+                  />
+                ) : null}
+                <Link to={`/book/${book.id}`} className="book-title-link">
+                  {book.title}
+                </Link>
               </td>
               <td>{book.courseName}</td>
               <td>{book.degreeName}</td>
@@ -51,7 +63,7 @@ const BookTable: React.FC = () => {
           ))
         ) : (
           <tr>
-            <td className='.no-books' colSpan={6}>לא נמצאו ספרים</td>
+            <td className="no-books" colSpan={6}>לא נמצאו ספרים</td>
           </tr>
         )}
       </tbody>

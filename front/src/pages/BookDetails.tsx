@@ -1,3 +1,4 @@
+// src/components/BookDetails.tsx
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -13,13 +14,14 @@ const BookDetails: React.FC = () => {
   const navigate = useNavigate();
 
   if (!book) {
-    return <div>ספר לא נמצא</div>;
+    return <div className="book-not-found">ספר לא נמצא</div>;
   }
 
   const handleShare = () => {
     const shareData = {
       title: book.title,
       text: `Check out this book: ${book.title}, available at ${book.location}.`,
+      url: window.location.href,
     };
 
     if (navigator.share) {
@@ -31,17 +33,43 @@ const BookDetails: React.FC = () => {
 
   const handleRedirectToLogin = () => {
     alert('אנא התחבר כדי לצפות במידע נוסף.');
-    navigate('/');
+    navigate('/login'); // Assuming '/login' is your login route
   };
+
+  // Function to get the appropriate cover image URL
+  const getCoverImage = () => {
+    if (book.cover?.large) {
+      return book.cover.large;
+    } else if (book.cover?.medium) {
+      return book.cover.medium;
+    } else if (book.cover?.small) {
+      return book.cover.small;
+    } else {
+      return null; // No cover image available
+    }
+  };
+
+  const coverImageUrl = getCoverImage();
 
   return (
     <div className="book-details">
-      <h1>{book.title}</h1>
-      <p><strong>שם קורס:</strong> {book.courseName}</p>
-      <p><strong>שם תואר:</strong> {book.degreeName}</p>
-      <p><strong>מחבר:</strong> {book.author}</p>
-      <p><strong>מיקום:</strong> {book.location}</p>
-      <p><strong>מספר ISBN:</strong> {book.isbn}</p>
+      {coverImageUrl && (
+        <div className="cover-image-container">
+          <img
+            src={coverImageUrl}
+            alt={`Cover of ${book.title}`}
+            className="book-cover-large"
+          />
+        </div>
+      )}
+      <h1 className="book-title">{book.title}</h1>
+      <div className="book-info">
+        <p><strong>שם קורס:</strong> {book.courseName}</p>
+        <p><strong>שם תואר:</strong> {book.degreeName}</p>
+        <p><strong>מחבר:</strong> {book.author}</p>
+        <p><strong>מיקום:</strong> {book.location}</p>
+        <p><strong>מספר ISBN:</strong> {book.isbn}</p>
+      </div>
       {isAuthenticated ? (
         <div className="auth-details">
           <p><strong>שם המוסר:</strong> {book.userName}</p>
@@ -56,7 +84,7 @@ const BookDetails: React.FC = () => {
         </div>
       )}
       <div className="share-button">
-        <button onClick={handleShare}>שתף</button>
+        <button onClick={handleShare} className="share-btn">שתף</button>
       </div>
     </div>
   );

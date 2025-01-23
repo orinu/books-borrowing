@@ -1,8 +1,10 @@
+// src/store/slices/booksSlice.ts
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface Book {
-  id: string;
+// Define the Book interface
+export interface Book {
+  _id: string;
   title: string;
   courseName: string;
   degreeName: string;
@@ -14,8 +16,29 @@ interface Book {
   userPhone: string;
   userEmail: string;
   status: "available" | "taken";
+  cover?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
 }
 
+// Define the form data interface
+interface FormData {
+  title: string;
+  courseName: string;
+  degreeName: string;
+  author: string;
+  location: string;
+  isbn: string;
+  cover?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
+}
+
+// Define filters (if needed)
 interface Filters {
   courseNumber: string;
   bookName: string;
@@ -23,6 +46,7 @@ interface Filters {
   degreeName: string;
 }
 
+// Define the initial state interface
 interface BooksState {
   books: Book[];
   filters: Filters;
@@ -30,51 +54,82 @@ interface BooksState {
   error: string | null;
 }
 
+// Base API URL from environment variables
+const API_URL = "http://localhost:3000";
+
 // Thunk to fetch all books
 export const fetchAllBooks = createAsyncThunk<Book[], void>(
   "books/fetchAllBooks",
   async (_, { rejectWithValue }) => {
     try {
-      // NOTE: if your server is on a different port or domain, update the URL accordingly
-      // Also use { withCredentials: true } if needed for cookies
-      const response = await axios.get("http://localhost:3000/api/books");
+      const response = await axios.get(`${API_URL}/api/books`, {
+        withCredentials: true, // Include cookies if needed
+      });
       return response.data;
     } catch (error: any) {
-      // Pass the error message to the rejected action
-      return rejectWithValue(error.response?.data || "Failed to fetch books");
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch books"
+      );
     }
   }
 );
 
-export const updateBookStatus = createAsyncThunk<
-  { id: string; status: "available" | "taken" }, // Success payload type
-  { id: string; status: "available" | "taken" }, // Arg type
-  { rejectValue: string } // Rejected payload type
->("books/updateBookStatus", async (args, { rejectWithValue }) => {
-  const { id, status } = args;
+// Thunk to add a new book
+export const addNewBook = createAsyncThunk<
+  Book,
+  FormData,
+  { rejectValue: string }
+>("books/addNewBook", async (bookData, { rejectWithValue }) => {
   try {
-    // If you need cookies (auth_token) for authentication, use { withCredentials: true }
-    const response = await axios.put(
-      `http://localhost:3000/api/books/${id}`,
+    const response = await axios.post(
+      `${API_URL}/api/books`,
       {
-        status,
+        ...bookData,
+        status: "available",
       },
       {
-        // Add this configuration object to include cookies
-        withCredentials: true,
+        withCredentials: true, // Include cookies if needed
       }
     );
-    // The server returns the updated book as `response.data`.
-    // We'll return an object containing the book's id and new status
-    return { id, status: response.data.status };
+    return response.data.book;
   } catch (error: any) {
-    console.error("Error updating book status:", error);
+    console.error("Error adding book:", error);
     return rejectWithValue(
-      error.response?.data?.message || "Failed to update book status"
+      error.response?.data?.message || "Failed to add new book"
     );
   }
 });
 
+// Thunk to update book status
+export const updateBookStatus = createAsyncThunk<
+  { id: string; status: "available" | "taken" },
+  { id: string; status: "available" | "taken" },
+  { rejectValue: string }
+>(
+  "books/updateBookStatus",
+  async (args, { rejectWithValue }) => {
+    const { id, status } = args;
+    try {
+      const response = await axios.put(
+        `${API_URL}/api/books/${id}`,
+        {
+          status,
+        },
+        {
+          withCredentials: true, // Include cookies if needed
+        }
+      );
+      return { id, status: response.data.status };
+    } catch (error: any) {
+      console.error("Error updating book status:", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update book status"
+      );
+    }
+  }
+);
+
+// Initial state
 const initialState: BooksState = {
   books: [],
   filters: {
@@ -87,13 +142,11 @@ const initialState: BooksState = {
   error: null,
 };
 
+// Create the slice
 export const booksSlice = createSlice({
   name: "books",
   initialState,
   reducers: {
-    addBook: (state, action: PayloadAction<Book>) => {
-      state.books.push(action.payload);
-    },
     setFilters: (state, action: PayloadAction<Partial<Filters>>) => {
       state.filters = { ...state.filters, ...action.payload };
     },
@@ -109,25 +162,44 @@ export const booksSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch all books
       .addCase(fetchAllBooks.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAllBooks.fulfilled, (state, action) => {
+      .addCase(fetchAllBooks.fulfilled, (state, action: PayloadAction<Book[]>) => {
         state.loading = false;
         state.error = null;
-        // The server data might not have an `id` field named "id",
-        // but rather "_id". You might want to transform them if needed:
-        // e.g.: const transformed = action.payload.map(b => ({ ...b, id: b._id }));
-        state.books = action.payload.map((book) => ({
-          ...book,
-          id: book._id, // copy _id to id
-        }));
+        state.books = action.payload
+          .filter((book) => !!book._id)
+          .map((book) => ({
+            ...book,
+            id: book._id,
+            cover: book.cover,
+          }));
       })
       .addCase(fetchAllBooks.rejected, (state, action) => {
         state.loading = false;
         state.error = String(action.payload);
       })
+      // Add new book
+      .addCase(addNewBook.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addNewBook.fulfilled, (state, action: PayloadAction<Book>) => {
+        state.loading = false;
+        state.books.push({
+          ...action.payload,
+          id: action.payload._id,
+          cover: action.payload.cover,
+        });
+      })
+      .addCase(addNewBook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add new book";
+      })
+      // Update book status
       .addCase(updateBookStatus.fulfilled, (state, action) => {
         const { id, status } = action.payload;
         const book = state.books.find((b) => b.id === id);
@@ -136,11 +208,13 @@ export const booksSlice = createSlice({
         }
       })
       .addCase(updateBookStatus.rejected, (state, action) => {
-        // Optionally handle an error message
         state.error = action.payload as string;
       });
   },
 });
 
-export const { addBook, setFilters, toggleBookStatus } = booksSlice.actions;
+// Export actions
+export const { setFilters, toggleBookStatus } = booksSlice.actions;
+
+// Export reducer
 export default booksSlice.reducer;

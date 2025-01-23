@@ -1,6 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+// models/Book.ts
+import mongoose, { Document, Schema } from "mongoose";
 
-interface IBook extends Document {
+export interface IBook extends Document {
   title: string;
   courseName: string;
   degreeName: string;
@@ -11,10 +12,15 @@ interface IBook extends Document {
   userName: string;
   userPhone: string;
   userEmail: string;
-  status: string;
+  status: "available" | "taken";
+  cover?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
 }
 
-const bookSchema = new Schema<IBook>({
+const BookSchema: Schema = new Schema({
   title: { type: String, required: true },
   courseName: { type: String, required: true },
   degreeName: { type: String, required: true },
@@ -25,7 +31,12 @@ const bookSchema = new Schema<IBook>({
   userName: { type: String, required: true },
   userPhone: { type: String, required: true },
   userEmail: { type: String, required: true },
-  status: { type: String, default: 'available' },
+  status: { type: String, enum: ["available", "taken"], default: "available" },
+  cover: {
+    small: { type: String },
+    medium: { type: String },
+    large: { type: String },
+  },
 });
 
-export default mongoose.model<IBook>('Book', bookSchema);
+export default mongoose.model<IBook>("Book", BookSchema);
