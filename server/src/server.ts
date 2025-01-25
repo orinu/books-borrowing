@@ -30,7 +30,7 @@ declare global {
 const JWT_SECRET = process.env.JWT_SECRET || "default_jwt_secret";
 
 // CORS Origin
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:4;173";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:4173";
 
 // Middleware to parse JSON and cookies
 app.use(express.json());
